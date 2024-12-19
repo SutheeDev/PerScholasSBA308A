@@ -44,14 +44,32 @@ const fetchConfig = async () => {
 //   })
 //   .catch((error) => console.log(error));
 
-const fetchPopularTv = fetchData("GET", "/tv/popular", {
-  language: "en-US",
-  page: "1",
-})
-  .then((data) => {
+const fetchPopularTv = async () => {
+  try {
+    const data = await fetchData("GET", "/tv/popular", {
+      language: "en-US",
+      page: "1",
+    });
     const results = data.results;
+
     results.forEach((result) => {
       const imgPath = result.poster_path;
+      const fullImgUrl = `${imgUrl}${imgSize}${imgPath}`;
+      console.log(fullImgUrl);
     });
-  })
-  .catch((error) => console.log(error));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// const fetchPopularTv = fetchData("GET", "/tv/popular", {
+//   language: "en-US",
+//   page: "1",
+// })
+//   .then((data) => {
+//     const results = data.results;
+//     results.forEach((result) => {
+//       const imgPath = result.poster_path;
+//     });
+//   })
+//   .catch((error) => console.log(error));
