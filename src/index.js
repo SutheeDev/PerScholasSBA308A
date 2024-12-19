@@ -35,15 +35,6 @@ const fetchConfig = async () => {
   }
 };
 
-// const fetchConfig = fetchData("GET", "/configuration")
-//   .then((data) => {
-//     // console.log(data.images);
-//     const imgUrl = data.images.secure_base_url;
-//     const sizes = data.images.poster_sizes;
-//     const imgSize = sizes[3];
-//   })
-//   .catch((error) => console.log(error));
-
 const fetchPopularTv = async () => {
   try {
     const data = await fetchData("GET", "/tv/popular", {
@@ -62,14 +53,9 @@ const fetchPopularTv = async () => {
   }
 };
 
-// const fetchPopularTv = fetchData("GET", "/tv/popular", {
-//   language: "en-US",
-//   page: "1",
-// })
-//   .then((data) => {
-//     const results = data.results;
-//     results.forEach((result) => {
-//       const imgPath = result.poster_path;
-//     });
-//   })
-//   .catch((error) => console.log(error));
+const initiatePage = async () => {
+  await fetchConfig();
+  await fetchPopularTv();
+};
+
+initiatePage();
