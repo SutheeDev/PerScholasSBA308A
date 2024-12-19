@@ -25,6 +25,7 @@ const fetchData = async (method, endpoint, params = {}) => {
 let imgUrl = "";
 let imgSize = "";
 
+// Fetch config to get image url and size to use for full image url
 const fetchConfig = async () => {
   try {
     const data = await fetchData("GET", "/configuration");
@@ -44,9 +45,18 @@ const fetchPopularTv = async () => {
     const results = data.results;
 
     results.forEach((result) => {
+      // Get image path and assemble the full image url
       const imgPath = result.poster_path;
       const fullImgUrl = `${imgUrl}${imgSize}${imgPath}`;
-      console.log(fullImgUrl);
+      // console.log(result);
+
+      // Gte name of the show
+      const name = result.original_name;
+      // Get id (need it later when fetch individual show???)
+      const show_id = result.id;
+      // For Genres, need to compare with genres object from 'https://api.themoviedb.org/3/genre/tv/list'
+      const genre_ids = result.genre_ids; // array
+      console.log(name, show_id, genre_ids);
     });
   } catch (error) {
     console.log(error);
