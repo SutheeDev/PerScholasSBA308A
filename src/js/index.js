@@ -2,7 +2,7 @@ import axios from "axios";
 const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
 
 const apiClient = axios.create({
-  baseURL: "https://api.themoviedb.org/3/",
+  baseURL: "https://api.themoviedb.org/3",
   headers: {
     accept: "application/json",
     Authorization: `Bearer ${accessToken}`,
@@ -24,6 +24,7 @@ const fetchData = async (method, endpoint, params = {}) => {
 
 let imgUrl = "";
 let imgSize = "";
+let tvGenres;
 
 // Fetch config to get image url and size to use for full image url
 const fetchConfig = async () => {
@@ -55,9 +56,29 @@ const fetchPopularTv = async () => {
       // Get id (need it later when fetch individual show???)
       const show_id = result.id;
       // For Genres, need to compare with genres object from 'https://api.themoviedb.org/3/genre/tv/list'
+
       const genre_ids = result.genre_ids; // array
-      console.log(name, show_id, genre_ids);
+      // console.log(name, show_id, genre_ids);
+      // console.log(tvGenres);
+      let genreArr = [];
+      genre_ids.forEach((id) => {
+        tvGenres.forEach((tvGenre) => {
+          if (tvGenre.id === id) {
+            genreArr.push(tvGenre.name);
+          }
+        });
+      });
+      console.log(genreArr);
     });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const fetchGenreList = async () => {
+  try {
+    const response = await fetchData("GET", "/genre/tv/list");
+    tvGenres = response.genres;
   } catch (error) {
     console.log(error);
   }
@@ -65,6 +86,7 @@ const fetchPopularTv = async () => {
 
 const initiatePage = async () => {
   await fetchConfig();
+  await fetchGenreList();
   await fetchPopularTv();
 };
 
