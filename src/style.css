@@ -70,7 +70,7 @@ a {
 .feature-container {
   padding-left: 40px;
   padding-right: 40px;
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -112,10 +112,38 @@ a {
   margin-bottom: 35px;
 }
 
+.searchbar {
+  position: relative;
+}
+
+input::placeholder {
+  color: var(--orange-500);
+}
+
 .searchbar input {
   width: 100%;
   outline: none;
   padding: 15px 20px;
   border-radius: 50px;
   border: none;
+  color: var(--black);
+}
+
+.search-btn {
+  position: absolute;
+  top: 0.5px;
+  right: 0.5px;
+  height: 98%;
+  padding: 0 3.6em;
+  border-radius: 50px;
+  border: none;
+  background-color: var(--orange-600);
+  color: var(--white);
+
+  transition: all 0.2s ease;
+}
+
+.search-btn:hover {
+  background-color: var(--orange-100);
+  color: var(--black);
 }
