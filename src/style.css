@@ -137,13 +137,40 @@ input::placeholder {
   padding: 0 3.6em;
   border-radius: 50px;
   border: none;
-  background-color: var(--orange-600);
-  color: var(--white);
+  background-color: var(--orange-100);
+  color: var(--black);
+  cursor: pointer;
 
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .search-btn:hover {
+  background-color: var(--orange-800);
+  color: var(--white);
+}
+
+/* ----------- Feature Section ----------- */
+.feature h5 {
+  color: var(--white);
+}
+
+.card {
+  width: 300px;
+  height: fit-content;
   background-color: var(--orange-100);
-  color: var(--black);
+}
+
+.cardFrame {
+  width: 100%;
+  border: solid 3px var(--white);
+}
+
+.cardImg {
+  width: 200px;
+}
+
+.wishlist {
+  width: 10px;
+  height: 10px;
+  background-color: var(--gray);
 }

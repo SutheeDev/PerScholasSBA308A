@@ -1,6 +1,8 @@
+import createCard from "./createCard";
 import axios from "axios";
 const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
 
+// Setup Axios
 const apiClient = axios.create({
   baseURL: "https://api.themoviedb.org/3",
   headers: {
@@ -9,6 +11,7 @@ const apiClient = axios.create({
   },
 });
 
+// Function to fetch API
 const fetchData = async (method, endpoint, params = {}) => {
   try {
     const response = await apiClient.request({
@@ -89,3 +92,4 @@ const initiatePage = async () => {
 };
 
 initiatePage();
+createCard("name", "imgUrl", 1);
