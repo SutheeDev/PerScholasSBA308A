@@ -70,6 +70,8 @@ const fetchPopularTv = async () => {
           }
         });
       });
+
+      createCard(name, fullImgUrl, show_id);
     });
   } catch (error) {
     console.log(error);
@@ -92,4 +94,3 @@ const initiatePage = async () => {
 };
 
 initiatePage();
-createCard("name", "imgUrl", 1);
