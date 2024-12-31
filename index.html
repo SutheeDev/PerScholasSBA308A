@@ -22,29 +22,35 @@
   <body>
     <main>
       <section class="navbar">
-        <nav>
+        <nav class="navbar-container">
           <div class="logo">
             <a href="#">BingeBuddy</a>
           </div>
-          <div></div>
+          <div class="navlist">
+            <p>HI!</p>
+          </div>
         </nav>
       </section>
 
       <section class="hero">
-        <div class="hero-content">
-          <h3>Welcome</h3>
-          <h5>Explore now</h5>
+        <div class="hero-container">
+          <div class="hero-content">
+            <h3>Welcome</h3>
+            <h5>Explore now</h5>
+          </div>
+          <form action="" class="searchbar">
+            <input type="text" />
+          </form>
         </div>
-        <form action="" class="searchbar">
-          <input type="text" />
-        </form>
       </section>
 
       <section class="feature">
-        <div class="feature-header">
-          <h5>Popular</h5>
+        <div class="feature-container">
+          <div class="feature-header">
+            <h5>Popular</h5>
+          </div>
+          <div class="feature-carousel"></div>
         </div>
-        <div class="feature-carousel"></div>
       </section>
     </main>
     <script type="module" src="/src/js/index.js"></script>

@@ -22,6 +22,10 @@
   --gray: #6d676e;
 }
 
+body {
+  /* background-color: var(--orange-500); */
+}
+
 h1,
 h2,
 h3,
@@ -30,13 +34,46 @@ h5,
 p {
   font-family: "Poppins", serif;
   font-weight: 400;
+  font-size: 1em;
 }
 
 .logo {
   font-family: "Oswald", serif;
+  font-weight: 400;
+  font-size: 2em;
 }
 
 a {
   text-decoration: none;
-  color: black;
+  color: var(--white);
+}
+
+.navbar {
+  background: var(--orange-500);
+}
+
+/* Container padding */
+.navbar-container,
+.hero-container,
+.feature-container {
+  padding-left: 40px;
+  padding-right: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.navlist {
+  height: 47px;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 2px;
+  color: var(--white);
 }
