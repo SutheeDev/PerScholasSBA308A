@@ -184,6 +184,17 @@ input::placeholder {
   height: 350px;
   position: relative;
   z-index: 1;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.card:hover .card-content {
+  transform: translateX(-50%) translateY(-8px);
+}
+.card:hover .cardFrame {
+  transform: translateY(-3px);
 }
 
 .cardFrame {
@@ -204,6 +215,8 @@ input::placeholder {
     0px 5.6px 15.6px -7px rgba(0, 0, 0, 0.054),
     0px 10.4px 29.2px -7px rgba(0, 0, 0, 0.065),
     0px 25px 70px -7px rgba(0, 0, 0, 0.09);
+
+  transition: all 0.2s ease;
 }
 
 .card-content {
@@ -216,7 +229,13 @@ input::placeholder {
   top: 0;
   left: 50%;
   transform: translateX(-50%);
+
+  transition: all 0.2s ease;
 }
+
+/* .card-content:hover {
+  transform: translateX(-50%) translateY(-5px);
+} */
 
 .card-img-container {
   width: 170px;
