@@ -52,7 +52,7 @@ const fetchPopularTv = async () => {
       // Get image path and assemble the full image url
       const imgPath = result.poster_path;
       const fullImgUrl = `${imgUrl}${imgSize}${imgPath}`;
-      // console.log(result);
+      console.log(result);
 
       // Gte name of the show
       const name = result.original_name;
@@ -60,18 +60,26 @@ const fetchPopularTv = async () => {
       // Get id (need it later when fetch individual show???)
       const show_id = result.id;
 
-      // Get genre array of each show
-      const genre_ids = result.genre_ids; // array
-      let genreArr = [];
-      genre_ids.forEach((id) => {
-        tvGenres.forEach((tvGenre) => {
-          if (tvGenre.id === id) {
-            genreArr.push(tvGenre.name);
-          }
-        });
-      });
+      // Get first_air_date
+      const dateStr = result.first_air_date;
+      const date = new Date(dateStr);
+      const options = { month: "short", day: "numeric", year: "numeric" };
+      const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
+        date
+      );
 
-      createCard(name, fullImgUrl, show_id);
+      // Get genre array of each show (Don't need it here!)
+      // const genre_ids = result.genre_ids; // array
+      // let genreArr = [];
+      // genre_ids.forEach((id) => {
+      //   tvGenres.forEach((tvGenre) => {
+      //     if (tvGenre.id === id) {
+      //       genreArr.push(tvGenre.name);
+      //     }
+      //   });
+      // });
+
+      createCard(name, fullImgUrl, show_id, formattedDate);
     });
   } catch (error) {
     console.log(error);

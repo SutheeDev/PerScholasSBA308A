@@ -1,6 +1,6 @@
 const cardsContainer = document.querySelector(".cards");
 
-const createCard = (name, imgUrl, id) => {
+const createCard = (name, imgUrl, id, date) => {
   // Create elements
   const card = document.createElement("div");
   const cardFrame = document.createElement("div");
@@ -10,7 +10,7 @@ const createCard = (name, imgUrl, id) => {
   const cardImg = document.createElement("img");
   const wishlist = document.createElement("div");
   const title = document.createElement("h6");
-  const releasedDate = document.createElement("p");
+  const airDate = document.createElement("p");
 
   // Add classes
   card.classList.add("card");
@@ -21,15 +21,18 @@ const createCard = (name, imgUrl, id) => {
   cardImgContainer.classList.add("card-img-container");
   wishlist.classList.add("wishlist");
   title.classList.add("title");
+  airDate.classList.add("airDate");
 
   // Add attribute
   cardImg.setAttribute("src", imgUrl);
 
   //   Add content
   title.innerText = name;
+  airDate.innerText = date;
 
   // Assemble
   cardTextContent.appendChild(title);
+  cardTextContent.appendChild(airDate);
   cardImgContainer.appendChild(cardImg);
   cardImgContainer.appendChild(wishlist);
   cardContent.appendChild(cardImgContainer);
@@ -38,8 +41,6 @@ const createCard = (name, imgUrl, id) => {
   card.appendChild(cardFrame);
 
   cardsContainer.appendChild(card);
-
-  console.log("create card here");
 };
 
 export default createCard;
