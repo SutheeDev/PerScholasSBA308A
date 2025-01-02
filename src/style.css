@@ -21,6 +21,7 @@
   --white: #fdfdfd;
   --gray: #6d676e;
   --overlay: #513501e8;
+  --white-overlay: #fdfdfd7b;
 
   /* Font-size */
   --h3: 4em;
@@ -47,7 +48,7 @@ p {
 
 h3 {
   font-size: var(--h3);
-  line-height: 80px;
+  line-height: 53px;
 }
 
 h5 {
@@ -103,6 +104,7 @@ a {
   height: 400px;
   display: grid;
   place-items: center;
+  /* border-bottom: solid 1px black; */
 }
 
 .hero-container {
@@ -112,6 +114,10 @@ a {
 
 .hero-content {
   margin-bottom: 35px;
+}
+
+.hero-content h3 {
+  margin-bottom: 20px;
 }
 
 .searchbar {
@@ -147,11 +153,16 @@ input::placeholder {
 }
 
 .search-btn:hover {
-  background-color: var(--orange-800);
+  background-color: var(--orange-600);
   color: var(--white);
 }
 
 /* ----------- Feature Section ----------- */
+.feature {
+  padding: 60px 0;
+  background: var(--orange-300);
+}
+
 .feature h5 {
   color: var(--white);
 }
@@ -181,6 +192,7 @@ input::placeholder {
   border: solid 6px var(--white);
   border-radius: 10px;
   z-index: 2;
+  background: var(--orange-600);
 
   position: absolute;
   bottom: 0;
@@ -225,14 +237,22 @@ input::placeholder {
 .wishlist {
   width: 26px;
   height: 26px;
-  background-color: var(--white);
+  background-color: var(--overlay);
   border-radius: 50%;
   opacity: 1;
   z-index: 4;
+  cursor: pointer;
 
   position: absolute;
   top: 10px;
   right: 10px;
+
+  display: grid;
+  place-items: center;
+}
+
+.wishlist i {
+  color: var(--white);
 }
 
 .card-text-content {
@@ -246,10 +266,10 @@ input::placeholder {
   font-size: var(--h6);
   line-height: 20px;
   margin-bottom: 10px;
-  color: var(--black);
+  color: var(--white);
 }
 
 .airDate {
   font-size: var(--p);
-  color: var(--black);
+  color: var(--white);
 }

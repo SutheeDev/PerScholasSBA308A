@@ -9,6 +9,7 @@ const createCard = (name, imgUrl, id, date) => {
   const cardImgContainer = document.createElement("div");
   const cardImg = document.createElement("img");
   const wishlist = document.createElement("div");
+  const heartIcon = document.createElement("i");
   const title = document.createElement("h6");
   const airDate = document.createElement("p");
 
@@ -20,6 +21,7 @@ const createCard = (name, imgUrl, id, date) => {
   cardImg.classList.add("cardImg");
   cardImgContainer.classList.add("card-img-container");
   wishlist.classList.add("wishlist");
+  heartIcon.classList.add("fa-regular", "fa-heart");
   title.classList.add("title");
   airDate.classList.add("airDate");
 
@@ -31,6 +33,7 @@ const createCard = (name, imgUrl, id, date) => {
   airDate.innerText = date;
 
   // Assemble
+  wishlist.appendChild(heartIcon);
   cardTextContent.appendChild(title);
   cardTextContent.appendChild(airDate);
   cardImgContainer.appendChild(cardImg);

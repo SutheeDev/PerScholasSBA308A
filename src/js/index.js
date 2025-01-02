@@ -52,7 +52,7 @@ const fetchPopularTv = async () => {
       // Get image path and assemble the full image url
       const imgPath = result.poster_path;
       const fullImgUrl = `${imgUrl}${imgSize}${imgPath}`;
-      console.log(result);
+      // console.log(result);
 
       // Gte name of the show
       const name = result.original_name;
@@ -86,10 +86,23 @@ const fetchPopularTv = async () => {
   }
 };
 
-const fetchGenreList = async () => {
+// const fetchGenreList = async () => {
+//   try {
+//     const response = await fetchData("GET", "/genre/tv/list");
+//     tvGenres = response.genres;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+const ceateGuestSession = async () => {
   try {
-    const response = await fetchData("GET", "/genre/tv/list");
-    tvGenres = response.genres;
+    const response = await fetchData(
+      "GET",
+      "/authentication/guest_session/new"
+    );
+    const userId = response.guest_session_id;
+    return userId;
   } catch (error) {
     console.log(error);
   }
@@ -97,8 +110,9 @@ const fetchGenreList = async () => {
 
 const initiatePage = async () => {
   await fetchConfig();
-  await fetchGenreList();
+  // await fetchGenreList();
   await fetchPopularTv();
+  await ceateGuestSession();
 };
 
 initiatePage();
