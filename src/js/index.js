@@ -13,12 +13,13 @@ const apiClient = axios.create({
 });
 
 // Function to fetch API
-const fetchData = async (method, endpoint, params = {}) => {
+const fetchData = async (method, endpoint, params = {}, data = {}) => {
   try {
     const response = await apiClient.request({
       method,
       url: endpoint,
       params,
+      data,
     });
     return response.data;
   } catch (error) {
@@ -128,6 +129,22 @@ export const addToWatchList = async (id) => {
   }
 };
 
+const createSessionId = async (token) => {
+  try {
+    const response = await fetchData(
+      "POST",
+      "authentication/session/new",
+      // { api_key: apiKey },
+      {},
+      { request_token: token }
+    );
+    // console.log(response);
+    return response.session_id;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const initiatePage = async () => {
   // Get the current URL
   const currentURL = window.location.href;
@@ -145,7 +162,13 @@ const initiatePage = async () => {
 
   // Get the token
   const token = urlSearchParams.get("request_token");
-  console.log(token);
+  // console.log(token);
+
+  if (token) {
+    // Create session_id
+    const sessionId = await createSessionId(token);
+    // Get account ID
+  }
 
   await fetchConfig();
   // await fetchGenreList();
