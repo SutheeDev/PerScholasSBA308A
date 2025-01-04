@@ -1,6 +1,7 @@
 import createCard from "./createCard";
 import axios from "axios";
 const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
+const apiKey = import.meta.env.VITE_API_KEY;
 
 // Setup Axios
 const apiClient = axios.create({
@@ -88,7 +89,7 @@ const fetchPopularTv = async () => {
       //   });
       // });
 
-      createCard(name, fullImgUrl, show_id, formattedDate, account_id);
+      createCard(name, fullImgUrl, show_id, formattedDate);
     });
   } catch (error) {
     console.log(error);
@@ -132,6 +133,7 @@ const initiatePage = async () => {
   // await fetchGenreList();
   await fetchPopularTv();
   // await ceateGuestSession();
+  await authenticateUser();
 };
 
 initiatePage();
@@ -149,3 +151,13 @@ initiatePage();
 //    GET /account
 //    Need sesion_id and API_KEY here
 //    Save the account_id and use it when adding the watchList
+
+const authenticateUser = async () => {
+  try {
+    const response = await fetchData("GET", "authentication/token/new", {
+      api_key: apiKey,
+    });
+    console.log(response.request_token);
+    const token = response.request_token;
+  } catch (error) {}
+};
