@@ -119,9 +119,18 @@ const fetchPopularTv = async (account_id = "") => {
 //   }
 // };
 
-export const addToWatchList = async (id) => {
+export const addToWatchList = async (account_id, show_id) => {
   try {
-    const response = await fetchData("POST", `account/${id}/watchlist`);
+    const response = await fetchData(
+      "POST",
+      `account/${account_id}/watchlist`,
+      {},
+      {
+        media_type: "tv",
+        media_id: show_id,
+        watchlist: true,
+      }
+    );
     console.log("added to watchlist!");
     console.log(response);
   } catch (error) {
@@ -182,7 +191,7 @@ const initiatePage = async () => {
     // Get account ID
     const response = await getAccountId(sessionId);
     accountId = response.id;
-    // return accountId;
+    console.log(accountId);
     await fetchConfig();
     await fetchPopularTv(accountId);
   } else {
