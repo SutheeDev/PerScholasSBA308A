@@ -1,4 +1,4 @@
-import { addToWatchList } from ".";
+import { addToWatchList, authenticateUser } from ".";
 
 const cardsContainer = document.querySelector(".cards");
 
@@ -49,7 +49,8 @@ const createCard = (name, imgUrl, show_id, date, account_id) => {
 
   // const wishlist = document.querySelector(".wishlist");
   wishlist.addEventListener("click", () => {
-    addToWatchList(account_id);
+    authenticateUser();
+    // addToWatchList(account_id);
   });
 };
 

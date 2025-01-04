@@ -133,7 +133,7 @@ const initiatePage = async () => {
   // await fetchGenreList();
   await fetchPopularTv();
   // await ceateGuestSession();
-  await authenticateUser();
+  // await authenticateUser();
 };
 
 initiatePage();
@@ -152,12 +152,16 @@ initiatePage();
 //    Need sesion_id and API_KEY here
 //    Save the account_id and use it when adding the watchList
 
-const authenticateUser = async () => {
+export const authenticateUser = async () => {
   try {
     const response = await fetchData("GET", "authentication/token/new", {
       api_key: apiKey,
     });
     console.log(response.request_token);
     const token = response.request_token;
-  } catch (error) {}
+    const url = `https://www.themoviedb.org/authenticate/${token}?redirect_to=http://localhost:5173//approved`;
+    window.location.href = url;
+  } catch (error) {
+    console.log(error);
+  }
 };
