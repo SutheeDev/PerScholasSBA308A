@@ -145,6 +145,18 @@ const createSessionId = async (token) => {
   }
 };
 
+const getAccountId = async (sessionId) => {
+  try {
+    const response = await fetchData("GET", "/account", {
+      api_key: apiKey,
+      sesion_id: sessionId,
+    });
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const initiatePage = async () => {
   // Get the current URL
   const currentURL = window.location.href;
@@ -168,13 +180,15 @@ const initiatePage = async () => {
     // Create session_id
     const sessionId = await createSessionId(token);
     // Get account ID
+    const response = await getAccountId(sessionId);
+    const accountId = response.id;
+    console.log(accountId);
+  } else {
+    console.log("No token!");
   }
 
   await fetchConfig();
-  // await fetchGenreList();
   await fetchPopularTv();
-  // await ceateGuestSession();
-  // await authenticateUser();
 };
 
 initiatePage();
