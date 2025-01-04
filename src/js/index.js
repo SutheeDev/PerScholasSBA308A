@@ -129,6 +129,24 @@ export const addToWatchList = async (id) => {
 };
 
 const initiatePage = async () => {
+  // Get the current URL
+  const currentURL = window.location.href;
+
+  // Turn the current url to object
+  const urlObject = new URL(currentURL);
+
+  // get search string
+  const searchStr = urlObject.search;
+
+  // Turn searchStr into a URLSearchParams object
+  // This will provide some method we need to access the request_token
+  // https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
+  const urlSearchParams = new URLSearchParams(searchStr);
+
+  // Get the token
+  const token = urlSearchParams.get("request_token");
+  console.log(token);
+
   await fetchConfig();
   // await fetchGenreList();
   await fetchPopularTv();
