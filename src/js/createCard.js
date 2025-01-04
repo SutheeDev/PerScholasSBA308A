@@ -1,6 +1,8 @@
+import { addToWatchList } from ".";
+
 const cardsContainer = document.querySelector(".cards");
 
-const createCard = (name, imgUrl, id, date) => {
+const createCard = (name, imgUrl, show_id, date, account_id) => {
   // Create elements
   const card = document.createElement("div");
   const cardFrame = document.createElement("div");
@@ -44,6 +46,11 @@ const createCard = (name, imgUrl, id, date) => {
   card.appendChild(cardFrame);
 
   cardsContainer.appendChild(card);
+
+  // const wishlist = document.querySelector(".wishlist");
+  wishlist.addEventListener("click", () => {
+    addToWatchList(account_id);
+  });
 };
 
 export default createCard;

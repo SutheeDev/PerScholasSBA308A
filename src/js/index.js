@@ -42,6 +42,15 @@ const fetchConfig = async () => {
 
 const fetchPopularTv = async () => {
   try {
+    // This doesn't work
+    // const guest_id = await createGuestSession()
+    //   .then((response) => {
+    //     return response;
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+
     const data = await fetchData("GET", "/tv/popular", {
       language: "en-US",
       page: "1",
@@ -79,7 +88,7 @@ const fetchPopularTv = async () => {
       //   });
       // });
 
-      createCard(name, fullImgUrl, show_id, formattedDate);
+      createCard(name, fullImgUrl, show_id, formattedDate, account_id);
     });
   } catch (error) {
     console.log(error);
@@ -95,7 +104,7 @@ const fetchPopularTv = async () => {
 //   }
 // };
 
-const ceateGuestSession = async () => {
+const createGuestSession = async () => {
   try {
     const response = await fetchData(
       "GET",
@@ -108,11 +117,35 @@ const ceateGuestSession = async () => {
   }
 };
 
+export const addToWatchList = async (id) => {
+  try {
+    const response = await fetchData("POST", `account/${id}/watchlist`);
+    console.log("added to watchlist!");
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const initiatePage = async () => {
   await fetchConfig();
   // await fetchGenreList();
   await fetchPopularTv();
-  await ceateGuestSession();
+  // await ceateGuestSession();
 };
 
 initiatePage();
+
+// Step to get account_id
+// 1. Request a token
+//    GET authentication/token/new
+// 2. Forward the user to:
+//    https://www.themoviedb.org/authenticate/{REQUEST_TOKEN}
+// 3. Create a session_id
+//    POST authentication/session/new
+//    Need validated request_token and API_KEY here
+//    Save the session_id
+// 4. Get account ID
+//    GET /account
+//    Need sesion_id and API_KEY here
+//    Save the account_id and use it when adding the watchList
