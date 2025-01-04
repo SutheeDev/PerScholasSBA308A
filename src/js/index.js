@@ -42,7 +42,7 @@ const fetchConfig = async () => {
   }
 };
 
-const fetchPopularTv = async () => {
+const fetchPopularTv = async (account_id = "") => {
   try {
     // This doesn't work
     // const guest_id = await createGuestSession()
@@ -90,7 +90,7 @@ const fetchPopularTv = async () => {
       //   });
       // });
 
-      createCard(name, fullImgUrl, show_id, formattedDate);
+      createCard(name, fullImgUrl, show_id, formattedDate, account_id);
     });
   } catch (error) {
     console.log(error);
@@ -106,18 +106,18 @@ const fetchPopularTv = async () => {
 //   }
 // };
 
-const createGuestSession = async () => {
-  try {
-    const response = await fetchData(
-      "GET",
-      "/authentication/guest_session/new"
-    );
-    const userId = response.guest_session_id;
-    return userId;
-  } catch (error) {
-    console.log(error);
-  }
-};
+// const createGuestSession = async () => {
+//   try {
+//     const response = await fetchData(
+//       "GET",
+//       "/authentication/guest_session/new"
+//     );
+//     const userId = response.guest_session_id;
+//     return userId;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 export const addToWatchList = async (id) => {
   try {
@@ -158,6 +158,7 @@ const getAccountId = async (sessionId) => {
 };
 
 const initiatePage = async () => {
+  let accountId;
   // Get the current URL
   const currentURL = window.location.href;
 
@@ -174,21 +175,20 @@ const initiatePage = async () => {
 
   // Get the token
   const token = urlSearchParams.get("request_token");
-  // console.log(token);
 
   if (token) {
     // Create session_id
     const sessionId = await createSessionId(token);
     // Get account ID
     const response = await getAccountId(sessionId);
-    const accountId = response.id;
-    console.log(accountId);
+    accountId = response.id;
+    // return accountId;
+    await fetchConfig();
+    await fetchPopularTv(accountId);
   } else {
-    console.log("No token!");
+    await fetchConfig();
+    await fetchPopularTv();
   }
-
-  await fetchConfig();
-  await fetchPopularTv();
 };
 
 initiatePage();
@@ -212,7 +212,7 @@ export const authenticateUser = async () => {
     const response = await fetchData("GET", "authentication/token/new", {
       api_key: apiKey,
     });
-    console.log(response.request_token);
+    // console.log(response.request_token);
     const token = response.request_token;
     const url = `https://www.themoviedb.org/authenticate/${token}?redirect_to=http://localhost:5173//approved`;
     window.location.href = url;

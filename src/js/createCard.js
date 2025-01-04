@@ -51,8 +51,12 @@ const createCard = (name, imgUrl, show_id, date, account_id) => {
   wishlist.addEventListener("click", () => {
     // Need some functionality to check if the user already approve the token here
     // If already approved, no need to authenticate again
-    authenticateUser();
-    // addToWatchList(account_id);
+    if (account_id) {
+      console.log(account_id);
+      addToWatchList(account_id);
+    } else {
+      authenticateUser();
+    }
   });
 };
 
