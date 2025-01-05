@@ -26,6 +26,7 @@ const createCard = (name, imgUrl, show_id, date, account_id, isInWatchList) => {
   title.classList.add("title");
   airDate.classList.add("airDate");
 
+  // If the show is in the watchlist, use solid heart icon
   if (isInWatchList) {
     heartIcon.classList.add("fa-solid", "fa-heart");
   } else {
@@ -52,30 +53,21 @@ const createCard = (name, imgUrl, show_id, date, account_id, isInWatchList) => {
 
   cardsContainer.appendChild(card);
 
-  // const wishlist = document.querySelector(".wishlist");
   wishlist.addEventListener("click", async () => {
-    // Need some functionality to check if the user already approve the token here
-    // If already approved, no need to authenticate again
+    // If there is no account_id, navigate the user to authenticate page
     if (account_id) {
-      // console.log(account_id);
       await toggleWatchList(account_id, show_id);
-      // toggleHeartIcon();
-      heartIcon.classList.remove("fa-regular");
-      heartIcon.classList.add("fa-solid");
+      if (heartIcon.classList.contains("fa-regular")) {
+        heartIcon.classList.remove("fa-regular");
+        heartIcon.classList.add("fa-solid");
+      } else {
+        heartIcon.classList.remove("fa-solid");
+        heartIcon.classList.add("fa-regular");
+      }
     } else {
       await authenticateUser();
     }
   });
 };
-
-// const toggleHeartIcon = () => {
-//   if (heartIcon.classList.contains("fa-regular")) {
-//     heartIcon.classList.remove("fa-regular");
-//     heartIcon.classList.add("fa-solid");
-//   } else {
-//     heartIcon.classList.remove("fa-solid");
-//     heartIcon.classList.add("fa-regular");
-//   }
-// };
 
 export default createCard;

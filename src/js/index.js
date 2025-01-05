@@ -13,7 +13,7 @@ const apiClient = axios.create({
 });
 
 // Function to fetch API
-const fetchData = async (method, endpoint, params = {}, data = {}) => {
+export const fetchData = async (method, endpoint, params = {}, data = {}) => {
   try {
     const response = await apiClient.request({
       method,
@@ -32,7 +32,7 @@ let imgSize = "";
 let tvGenres;
 
 // Fetch config to get image url and size to use for full image url
-const fetchConfig = async () => {
+export const fetchConfig = async () => {
   try {
     const data = await fetchData("GET", "/configuration");
     imgUrl = data.images.secure_base_url;
@@ -70,6 +70,7 @@ const fetchPopularTv = async (account_id = "") => {
       // Get id (need it later when fetch individual show???)
       const show_id = result.id;
 
+      // Compare show_id with id of the shows in the watchlist
       if (addedShowArr) {
         addedShowArr.forEach((addedShow) => {
           if (addedShow.id === show_id) {
@@ -175,7 +176,6 @@ const addToWatchList = async (account_id, show_id) => {
         watchlist: true,
       }
     );
-    console.log("added to watchlist!");
   } catch (error) {
     console.log(error);
   }
@@ -193,7 +193,6 @@ const removeFromWatchList = async (account_id, show_id) => {
         watchlist: false,
       }
     );
-    console.log("removed from watchlist!");
   } catch (error) {
     console.log(error);
   }
@@ -204,11 +203,9 @@ const createSessionId = async (token) => {
     const response = await fetchData(
       "POST",
       "authentication/session/new",
-      // { api_key: apiKey },
       {},
       { request_token: token }
     );
-    // console.log(response);
     return response.session_id;
   } catch (error) {
     console.log(error);
@@ -281,7 +278,6 @@ export const authenticateUser = async () => {
     const response = await fetchData("GET", "authentication/token/new", {
       api_key: apiKey,
     });
-    // console.log(response.request_token);
     const token = response.request_token;
     const url = `https://www.themoviedb.org/authenticate/${token}?redirect_to=http://localhost:5173//approved`;
     window.location.href = url;
@@ -289,3 +285,74 @@ export const authenticateUser = async () => {
     console.log(error);
   }
 };
+
+// Search Functionality
+
+const searchBar = document.querySelector(".searchbar");
+const searchInput = document.getElementById("search");
+
+const fetchSearchResult = async (searchValue) => {
+  try {
+    const response = await fetchData("GET", "/search/movie", {
+      query: searchValue,
+      include_adult: "false",
+      language: "en-US",
+      page: "1",
+    });
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+searchBar.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  await fetchConfig();
+
+  const searchValue = searchInput.value;
+  const response = await fetchSearchResult(searchValue);
+  const shows = response.results;
+  //   console.log(shows);
+  console.log(imgUrl, imgSize);
+
+  shows.forEach((result) => {
+    let isInWatchList = false;
+    let fullImgUrl;
+    // Get image path and assemble the full image url
+    const imgPath = result.poster_path;
+    if (imgPath) {
+      fullImgUrl = `${imgUrl}${imgSize}${imgPath}`;
+    } else {
+      fullImgUrl =
+        "https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg";
+    }
+
+    // Gte name of the show
+    const name = result.title;
+
+    // Get id (need it later when fetch individual show???)
+    const show_id = result.id;
+
+    // Compare show_id with id of the shows in the watchlist
+    // if (addedShowArr) {
+    //   addedShowArr.forEach((addedShow) => {
+    //     if (addedShow.id === show_id) {
+    //       isInWatchList = true;
+    //     }
+    //   });
+    // }
+
+    // Get first_air_date
+    const dateStr = result.release_date;
+    let formattedDate;
+    if (dateStr) {
+      const date = new Date(dateStr);
+      const options = { month: "short", day: "numeric", year: "numeric" };
+      formattedDate = new Intl.DateTimeFormat("en-US", options).format(date);
+    } else {
+      formattedDate = "";
+    }
+
+    createCard(name, fullImgUrl, show_id, formattedDate);
+  });
+});

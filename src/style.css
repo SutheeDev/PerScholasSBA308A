@@ -19,7 +19,7 @@
 
   --black: #1b1b1e;
   --white: #fdfdfd;
-  --gray: #6d676e;
+  --gray: #e9e1ea;
   --overlay: #513501e8;
   --white-overlay: #fdfdfd7b;
 
@@ -242,6 +242,7 @@ input::placeholder {
   height: 240px;
   border-radius: 10px;
   overflow: hidden;
+  background-color: var(--gray);
 
   box-shadow: 0px 0.4px 0.4px rgba(0, 0, 0, 0.028),
     0px 0.9px 1px rgba(0, 0, 0, 0.041), 0px 1.6px 1.7px rgba(0, 0, 0, 0.051),
