@@ -44,14 +44,12 @@ const fetchConfig = async () => {
 
 const fetchPopularTv = async (account_id = "") => {
   try {
-    // This doesn't work
-    // const guest_id = await createGuestSession()
-    //   .then((response) => {
-    //     return response;
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+    // Get watchlist
+    let addedShowArr;
+    if (account_id) {
+      addedShowArr = await getWatchList(account_id);
+      console.log(addedShowArr);
+    }
 
     const data = await fetchData("GET", "/tv/popular", {
       language: "en-US",
@@ -60,6 +58,7 @@ const fetchPopularTv = async (account_id = "") => {
     const results = data.results;
 
     results.forEach((result) => {
+      let isInWatchList = false;
       // Get image path and assemble the full image url
       const imgPath = result.poster_path;
       const fullImgUrl = `${imgUrl}${imgSize}${imgPath}`;
@@ -70,6 +69,14 @@ const fetchPopularTv = async (account_id = "") => {
 
       // Get id (need it later when fetch individual show???)
       const show_id = result.id;
+
+      if (addedShowArr) {
+        addedShowArr.forEach((addedShow) => {
+          if (addedShow.id === show_id) {
+            isInWatchList = true;
+          }
+        });
+      }
 
       // Get first_air_date
       const dateStr = result.first_air_date;
@@ -90,7 +97,14 @@ const fetchPopularTv = async (account_id = "") => {
       //   });
       // });
 
-      createCard(name, fullImgUrl, show_id, formattedDate, account_id);
+      createCard(
+        name,
+        fullImgUrl,
+        show_id,
+        formattedDate,
+        account_id,
+        isInWatchList
+      );
     });
   } catch (error) {
     console.log(error);
@@ -119,9 +133,39 @@ const fetchPopularTv = async (account_id = "") => {
 //   }
 // };
 
-export const addToWatchList = async (account_id, show_id) => {
+export const getWatchList = async (account_id) => {
   try {
-    const response = await fetchData(
+    const data = await fetchData("GET", `account/${account_id}/watchlist/tv`, {
+      language: "en-US",
+      page: "1",
+      sort_by: "created_at.asc",
+    });
+    return data.results;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const toggleWatchList = async (account_id, show_id) => {
+  try {
+    const addedShowArr = await getWatchList(account_id);
+
+    const addedShow = addedShowArr.find(
+      (showInWatchlist) => showInWatchlist.id === show_id
+    );
+    if (addedShow) {
+      removeFromWatchList(account_id, show_id);
+    } else {
+      addToWatchList(account_id, show_id);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const addToWatchList = async (account_id, show_id) => {
+  try {
+    await fetchData(
       "POST",
       `account/${account_id}/watchlist`,
       {},
@@ -132,7 +176,24 @@ export const addToWatchList = async (account_id, show_id) => {
       }
     );
     console.log("added to watchlist!");
-    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const removeFromWatchList = async (account_id, show_id) => {
+  try {
+    await fetchData(
+      "POST",
+      `account/${account_id}/watchlist`,
+      {},
+      {
+        media_type: "tv",
+        media_id: show_id,
+        watchlist: false,
+      }
+    );
+    console.log("removed from watchlist!");
   } catch (error) {
     console.log(error);
   }
@@ -191,7 +252,6 @@ const initiatePage = async () => {
     // Get account ID
     const response = await getAccountId(sessionId);
     accountId = response.id;
-    console.log(accountId);
     await fetchConfig();
     await fetchPopularTv(accountId);
   } else {

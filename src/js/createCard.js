@@ -1,8 +1,8 @@
-import { addToWatchList, authenticateUser } from ".";
+import { toggleWatchList, authenticateUser } from ".";
 
 const cardsContainer = document.querySelector(".cards");
 
-const createCard = (name, imgUrl, show_id, date, account_id) => {
+const createCard = (name, imgUrl, show_id, date, account_id, isInWatchList) => {
   // Create elements
   const card = document.createElement("div");
   const cardFrame = document.createElement("div");
@@ -23,9 +23,14 @@ const createCard = (name, imgUrl, show_id, date, account_id) => {
   cardImg.classList.add("cardImg");
   cardImgContainer.classList.add("card-img-container");
   wishlist.classList.add("wishlist");
-  heartIcon.classList.add("fa-regular", "fa-heart");
   title.classList.add("title");
   airDate.classList.add("airDate");
+
+  if (isInWatchList) {
+    heartIcon.classList.add("fa-solid", "fa-heart");
+  } else {
+    heartIcon.classList.add("fa-regular", "fa-heart");
+  }
 
   // Add attribute
   cardImg.setAttribute("src", imgUrl);
@@ -53,7 +58,8 @@ const createCard = (name, imgUrl, show_id, date, account_id) => {
     // If already approved, no need to authenticate again
     if (account_id) {
       // console.log(account_id);
-      await addToWatchList(account_id, show_id);
+      await toggleWatchList(account_id, show_id);
+      // toggleHeartIcon();
       heartIcon.classList.remove("fa-regular");
       heartIcon.classList.add("fa-solid");
     } else {
@@ -61,5 +67,15 @@ const createCard = (name, imgUrl, show_id, date, account_id) => {
     }
   });
 };
+
+// const toggleHeartIcon = () => {
+//   if (heartIcon.classList.contains("fa-regular")) {
+//     heartIcon.classList.remove("fa-regular");
+//     heartIcon.classList.add("fa-solid");
+//   } else {
+//     heartIcon.classList.remove("fa-solid");
+//     heartIcon.classList.add("fa-regular");
+//   }
+// };
 
 export default createCard;
