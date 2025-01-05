@@ -54,6 +54,8 @@ const createCard = (name, imgUrl, show_id, date, account_id) => {
     if (account_id) {
       // console.log(account_id);
       await addToWatchList(account_id, show_id);
+      heartIcon.classList.remove("fa-regular");
+      heartIcon.classList.add("fa-solid");
     } else {
       await authenticateUser();
     }
