@@ -45,10 +45,9 @@ export const fetchConfig = async () => {
 const fetchPopularTv = async (account_id = "") => {
   try {
     // Get watchlist
-    let addedShowArr;
+    let watchListArr;
     if (account_id) {
-      addedShowArr = await getWatchList(account_id);
-      console.log(addedShowArr);
+      watchListArr = await getWatchList(account_id);
     }
 
     const data = await fetchData("GET", "/tv/popular", {
@@ -58,45 +57,8 @@ const fetchPopularTv = async (account_id = "") => {
     const results = data.results;
 
     results.forEach((result) => {
-      let isInWatchList = false;
-      // Get image path and assemble the full image url
-      const imgPath = result.poster_path;
-      const fullImgUrl = `${imgUrl}${imgSize}${imgPath}`;
-      // console.log(result);
-
-      // Gte name of the show
-      const name = result.original_name;
-
-      // Get id (need it later when fetch individual show???)
-      const show_id = result.id;
-
-      // Compare show_id with id of the shows in the watchlist
-      if (addedShowArr) {
-        addedShowArr.forEach((addedShow) => {
-          if (addedShow.id === show_id) {
-            isInWatchList = true;
-          }
-        });
-      }
-
-      // Get first_air_date
-      const dateStr = result.first_air_date;
-      const date = new Date(dateStr);
-      const options = { month: "short", day: "numeric", year: "numeric" };
-      const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
-        date
-      );
-
-      // Get genre array of each show (Don't need it here!)
-      // const genre_ids = result.genre_ids; // array
-      // let genreArr = [];
-      // genre_ids.forEach((id) => {
-      //   tvGenres.forEach((tvGenre) => {
-      //     if (tvGenre.id === id) {
-      //       genreArr.push(tvGenre.name);
-      //     }
-      //   });
-      // });
+      const [name, fullImgUrl, show_id, formattedDate, isInWatchList] =
+        generatePopularShowData(result, watchListArr);
 
       createCard(
         name,
@@ -111,28 +73,6 @@ const fetchPopularTv = async (account_id = "") => {
     console.log(error);
   }
 };
-
-// const fetchGenreList = async () => {
-//   try {
-//     const response = await fetchData("GET", "/genre/tv/list");
-//     tvGenres = response.genres;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// const createGuestSession = async () => {
-//   try {
-//     const response = await fetchData(
-//       "GET",
-//       "/authentication/guest_session/new"
-//     );
-//     const userId = response.guest_session_id;
-//     return userId;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 
 export const getWatchList = async (account_id) => {
   try {
@@ -224,8 +164,8 @@ const getAccountId = async (sessionId) => {
   }
 };
 
+let accountId;
 const initiatePage = async () => {
-  let accountId;
   // Get the current URL
   const currentURL = window.location.href;
 
@@ -305,54 +245,118 @@ const fetchSearchResult = async (searchValue) => {
   }
 };
 
-searchBar.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  await fetchConfig();
+const submitSearchTerm = async (searchBar, account_id) => {
+  searchBar.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    await fetchConfig();
 
-  const searchValue = searchInput.value;
-  const response = await fetchSearchResult(searchValue);
-  const shows = response.results;
-  //   console.log(shows);
-  console.log(imgUrl, imgSize);
-
-  shows.forEach((result) => {
-    let isInWatchList = false;
-    let fullImgUrl;
-    // Get image path and assemble the full image url
-    const imgPath = result.poster_path;
-    if (imgPath) {
-      fullImgUrl = `${imgUrl}${imgSize}${imgPath}`;
-    } else {
-      fullImgUrl =
-        "https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg";
+    let addedShowArr;
+    if (account_id) {
+      addedShowArr = await getWatchList(account_id);
+      console.log(addedShowArr);
     }
 
-    // Gte name of the show
-    const name = result.title;
+    const searchValue = searchInput.value;
+    const response = await fetchSearchResult(searchValue);
+    const shows = response.results;
 
-    // Get id (need it later when fetch individual show???)
-    const show_id = result.id;
+    clearCards();
+    shows.forEach((show) => {
+      const [name, fullImgUrl, show_id, formattedDate, isInWatchList] =
+        generateSearchedShowData(show, addedShowArr);
 
-    // Compare show_id with id of the shows in the watchlist
-    // if (addedShowArr) {
-    //   addedShowArr.forEach((addedShow) => {
-    //     if (addedShow.id === show_id) {
-    //       isInWatchList = true;
-    //     }
-    //   });
-    // }
-
-    // Get first_air_date
-    const dateStr = result.release_date;
-    let formattedDate;
-    if (dateStr) {
-      const date = new Date(dateStr);
-      const options = { month: "short", day: "numeric", year: "numeric" };
-      formattedDate = new Intl.DateTimeFormat("en-US", options).format(date);
-    } else {
-      formattedDate = "";
-    }
-
-    createCard(name, fullImgUrl, show_id, formattedDate);
+      createCard(
+        name,
+        fullImgUrl,
+        show_id,
+        formattedDate,
+        account_id,
+        isInWatchList
+      );
+    });
   });
-});
+};
+
+submitSearchTerm(searchBar, accountId);
+
+const generatePopularShowData = (showObj, watchListArr) => {
+  let isInWatchList = false;
+
+  // Get image path and assemble the full image url
+  let fullImgUrl;
+  const imgPath = showObj.poster_path;
+  // const fullImgUrl = `${imgUrl}${imgSize}${imgPath}`;
+  if (imgPath) {
+    fullImgUrl = `${imgUrl}${imgSize}${imgPath}`;
+  } else {
+    fullImgUrl =
+      "https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg";
+  }
+
+  // Get name of the showObj
+  const name = showObj.original_name;
+
+  // Get id
+  const show_id = showObj.id;
+
+  // Compare show_id with id of the shows in the watchlist
+  if (watchListArr) {
+    watchListArr.forEach((watchList) => {
+      if (watchList.id === show_id) {
+        isInWatchList = true;
+      }
+    });
+  }
+
+  // Get first_air_date
+  const dateStr = showObj.first_air_date;
+  const date = new Date(dateStr);
+  const options = { month: "short", day: "numeric", year: "numeric" };
+  const formattedDate = new Intl.DateTimeFormat("en-US", options).format(date);
+
+  return [name, fullImgUrl, show_id, formattedDate, isInWatchList];
+};
+
+const generateSearchedShowData = (showObj, watchListArr) => {
+  let isInWatchList = false;
+
+  let fullImgUrl;
+  const imgPath = showObj.poster_path;
+  if (imgPath) {
+    fullImgUrl = `${imgUrl}${imgSize}${imgPath}`;
+  } else {
+    fullImgUrl =
+      "https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg";
+  }
+
+  const name = showObj.title;
+  const show_id = showObj.id;
+
+  if (watchListArr) {
+    watchListArr.forEach((watchList) => {
+      if (watchList.id === show_id) {
+        isInWatchList = true;
+      }
+    });
+  }
+
+  // Get first_air_date
+  const dateStr = showObj.release_date;
+  let formattedDate;
+  if (dateStr) {
+    const date = new Date(dateStr);
+    const options = { month: "short", day: "numeric", year: "numeric" };
+    formattedDate = new Intl.DateTimeFormat("en-US", options).format(date);
+  } else {
+    formattedDate = "";
+  }
+
+  return [name, fullImgUrl, show_id, formattedDate, isInWatchList];
+};
+
+const cardsContainer = document.querySelector(".cards");
+const clearCards = () => {
+  while (cardsContainer.firstChild) {
+    cardsContainer.removeChild(cardsContainer.firstChild);
+  }
+};
