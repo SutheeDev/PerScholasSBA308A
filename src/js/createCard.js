@@ -1,8 +1,16 @@
-import { toggleWatchList, authenticateUser } from ".";
+import authenticateUser from "./authenticateUser";
+import { toggleWatchList } from "./watchList";
 
 const cardsContainer = document.querySelector(".cards");
 
-const createCard = (name, imgUrl, show_id, date, account_id, isInWatchList) => {
+export const createCard = (
+  name,
+  imgUrl,
+  show_id,
+  date,
+  account_id,
+  isInWatchList
+) => {
   // Create elements
   const card = document.createElement("div");
   const cardFrame = document.createElement("div");
@@ -70,4 +78,8 @@ const createCard = (name, imgUrl, show_id, date, account_id, isInWatchList) => {
   });
 };
 
-export default createCard;
+export const clearCards = () => {
+  while (cardsContainer.firstChild) {
+    cardsContainer.removeChild(cardsContainer.firstChild);
+  }
+};
